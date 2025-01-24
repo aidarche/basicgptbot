@@ -1,0 +1,77 @@
+# Python
+*.pyc
+*.pyo
+*.pyd
+__pycache__/
+*.log
+*.tmp
+*.sqlite3
+
+# Virtual environment
+env/
+venv/
+ENV/
+VENV/
+*.egg-info/
+.eggs/
+
+# PyCharm
+.idea/
+*.iml
+*.iws
+.idea_modules/
+
+# Jupyter Notebook
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# Windows
+Thumbs.db
+desktop.ini
+
+# Linux
+*.swp
+*.swo
+
+# Test artifacts
+.tox/
+.cache/
+.coverage
+*.cover
+*.log
+nosetests.xml
+coverage.xml
+*.pytest_cache/
+
+# Build artifacts
+build/
+dist/
+*.egg
+.installed.cfg
+*.wheel
+
+# PyInstaller
+*.manifest
+*.spec
+
+# MyPy
+.mypy_cache/
+
+# Pipenv
+Pipfile.lock
+
+# Poetry
+poetry.lock
+
+# Docker
+*.pid
+.env
+
+# Miscellaneous
+*.bak
+*.orig
+*.rej
+*.sublime-project
+*.sublime-workspace
