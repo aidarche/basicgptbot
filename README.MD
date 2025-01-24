@@ -2,7 +2,7 @@
 
 This is a basic Telegram bot that connects to the OpenAI API. The bot can handle text and voice messages, sending user inputs to OpenAI and returning responses.
 
-You can try our main bot with a wide range of features, such as image generation, dialogue context saving, voice message support, model selection, and much more. Many of these features are available for free at the following link: [intellectivebot]("https://t.me/intellectivebot").
+You can try our main bot with a wide range of features, such as image generation, dialogue context saving, voice message support, model selection, and much more. Many of these features are available for free at the following link: [intellectivebot](https://t.me/intellectivebot).
 
 ### Features
 
