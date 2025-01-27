@@ -24,23 +24,20 @@ HELP_MESSAGE = '''
 '''
 
 
-async def start_handle(update: Update, context: CallbackContext):
-
-    reply_text = WELCOME_MESSAGE
-    await update.message.reply_text(reply_text, parse_mode=ParseMode.HTML)
+async def start_handle(update: Update, context: CallbackContext) -> None:
+    await update.message.reply_text(WELCOME_MESSAGE, parse_mode=ParseMode.HTML)
 
 
-async def help_handle(update: Update, context: CallbackContext):
-
+async def help_handle(update: Update, context: CallbackContext) -> None:
     await update.message.reply_text(HELP_MESSAGE, parse_mode=ParseMode.HTML)
 
 
 async def send_to_openai(user_message: str) -> str:
     """
-    Отправляет сообщение в OpenAI API и возвращает ответ.
+    Sends a message to the OpenAI API and returns its response.
     """
     response = openai.ChatCompletion.create(
-        model=OPENAI_VERSION,  # Укажите модель
+        model=OPENAI_VERSION,
         messages=[
             {"role": "user", "content": user_message},
         ],
@@ -50,7 +47,7 @@ async def send_to_openai(user_message: str) -> str:
 
 async def message_handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    Обрабатывает текстовые сообщения пользователей, отправляет их в OpenAI API и возвращает ответ.
+    Handles text messages from users, sends them to the OpenAI API, and returns the response.
     """
     user_message = update.message.text
     chat_id = update.effective_chat.id
@@ -60,9 +57,9 @@ async def message_handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         return
 
     try:
-        # Используем общую функцию для обработки сообщения
+        # Use the shared function to process the message
         bot_reply = await send_to_openai(user_message)
-        # Отправляем ответ пользователю
+        # Send the response back to the user
         await context.bot.send_message(chat_id=chat_id, text=bot_reply)
 
     except openai.error.OpenAIError:
@@ -73,11 +70,11 @@ async def message_handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
 
 async def voice_message_handle(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """
-    Обрабатывает голосовые сообщения пользователей:
-    1. Загружает голосовое сообщение.
-    2. Расшифровывает его в текст.
-    3. Отправляет текст в OpenAI API.
-    4. Возвращает ответ пользователю.
+    Handles voice messages from users:
+    1. Downloads the voice message.
+    2. Transcribes it into text.
+    3. Sends the text to the OpenAI API.
+    4. Returns the response to the user.
     """
     chat_id = update.effective_chat.id
 
@@ -87,27 +84,27 @@ async def voice_message_handle(update: Update, context: ContextTypes.DEFAULT_TYP
         return
 
     try:
-        # Получение файла голосового сообщения
+        # Retrieve the voice message file
         voice = update.message.voice
         file = await context.bot.get_file(voice.file_id)
         file_path = file.file_path
 
-        # Скачиваем голосовое сообщение
+        # Download the voice message
         with tempfile.NamedTemporaryFile(delete=False, suffix=".ogg") as temp_file:
             file_content = requests.get(file_path).content
             temp_file.write(file_content)
             temp_file_path = temp_file.name
 
-        # Преобразуем голос в текст
+        # Convert voice to text
         with open(temp_file_path, "rb") as audio_file:
             transcript = openai.Audio.transcribe("whisper-1", audio_file)
 
         user_message = transcript['text']
         await context.bot.send_message(chat_id=chat_id, text=f"Ваше сообщение: {user_message}")
-        # Используем общую функцию для отправки текста в OpenAI API
+        # Use the shared function to send the text to OpenAI API
         bot_reply = await send_to_openai(user_message)
 
-        # Отправляем ответ пользователю
+        # Send the response back to the user
         await context.bot.send_message(chat_id=chat_id, text=bot_reply)
 
     except openai.error.OpenAIError:
@@ -115,6 +112,6 @@ async def voice_message_handle(update: Update, context: ContextTypes.DEFAULT_TYP
     except Exception:
         await update.message.reply_text("Что-то пошло не так. Пожалуйста, повторите попытку позже.")
     finally:
-        # Удаляем временный файл
+        # Delete the temporary file
         if os.path.exists(temp_file_path):
             os.remove(temp_file_path)
