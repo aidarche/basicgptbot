@@ -15,7 +15,7 @@ You can try our main bot with a wide range of features, such as image generation
 #### 1. Clone the Repository
 
 
-    git clone https://github.com/your-repo/telegram-openai-bot.git
+    git clone git@github.com:aidarche/basicgptbot.git
     cd basicgptbot  
 
 #### 2. Install Python Dependencies  
